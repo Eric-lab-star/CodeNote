@@ -1,31 +1,22 @@
-# Branches in a Nutshell
-resoure: [git branching](https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell)
+# Git Branching
+
 ## Branches in a Nutshell
 
-When you make a commit, Git stores a commit object that contains a pointer to the snapshot of the content you staged.
+A branch in Git is simply movable pointer to one of these commits.
 
+## Creating a New Branches
 
-Staging the files computes a checksum for each one, stores that version of the file in the Git repository, and add that checksum to the staging area
+`git branch testing`
 
-![[commit-and-tree.png]]
+HEAD is special pointer pointing current location in local branch
 
-| Term   | Definition                                                                                  |
-| ------ |:------------------------------------------------------------------------------------------- |
-| blob   | represents version of files                                                                 |
-| tree   | A snapshotlists the content of the directory and specifies which file names are stored as which blobs |
-| commit | pointing to root tree                                                                       |
+## Switching Branches
 
-![[commits-and-parents.png]]
+`git checkout <branch name>`
 
+you can use `git switch`
+This moves HEAD to point to the new branch given in the command
 
-if you make some change and commit again, next commit stores a pointer to parent commit that came immeditely before it.
+`git log --oneline --graph --all`
 
-A branch in Git is simply a light weight movable pointer to one of these commits. As you start making commits, you're given a master branch that points to the last commit you made. Everytime you commit the mater branch moves forward automatically.
-
-![[branch-and-history.png]]
-
-
-## Creating a New Branch
-
-When you run command `git branch testing`, this creates new branch testing pointing to the same commit.
-
+This prompt shows branched in simple graph

@@ -45,7 +45,7 @@ The rules for the patterns
 - `[0-9]` matches any characters between them
 - `a/**/b` matches nested directories
 
-```
+```zsh
 # ignore all .a files
 *.a
 
@@ -165,17 +165,17 @@ show little nice graph showing your branch and merge history
 undo modifired working directory
 `git restore <filename>`
 
-`git add ` 취소
+`git add` 취소
 `git restore --staged <filename>`
 
-# Working with Remotes
+## Working with Remotes
 
 ## Showing Your Remotes
 
 `git remote`
 
 - list the the shortnames of each remote
-- `origin` is default name git give
+- `origin` is default remote branchname created by `git clone` command
 
 `git clone`
 
@@ -189,7 +189,7 @@ undo modifired working directory
 
 `git remote add <shortname> <url>`
 
-- add remote repository
+- add remote repository explicitly
 
 `git fetch <shortname>`
 
@@ -197,6 +197,8 @@ undo modifired working directory
 - shortname에 있는 데이터는 remote 브렌치에 있다. local 브렌치로 가져오기 위해서는 merge 해야한다.
   - `git branch -r` --> 브랜치 이름 확인
   - `git merge <remote branch>`
+
+If remote branch and local branch does not share same commit history, git refuses to merge two branches
 
 ## Fetching and Pulling from your remotes
 
@@ -213,11 +215,19 @@ To get data from remote proj.
 
 - if you and someone else clone at the same time and they push upstream and then you stream, your push will reightly be rejected you will have to fetch work first.
 
+## Inspecting a Remote
+
+`git remote show origin`
+
 ## Renaming and Removing Remotes
 
 `git remote rename <old> <new>`
 
-# Tagging
+`git remote remove <remote>`
+
+- remve remove branch
+
+## Tagging
 
 Git has the ability to tag specific points in a repository's
 history as being important. Typically, people use this
@@ -259,6 +269,8 @@ to provide lightweight tag just provide a tag name.
 
 ## Tagging Later
 
+If you want to make a tag from previously commited file, append commit name.
+
 `git tag -a v1.2 9fceb02`
 나중에 git log를 통해서 commit 이름을 파악한 다음 태그를 지정할 수 있다.
 
@@ -283,6 +295,12 @@ deleting tag from a remote server
 `git checkout <tagname>`
 
 > [!note]- Note
-> git checkout `<tagname>` puts your repository in "detached head" state. In "detached HEAD" state, if you make changes and then created a commit, the tag will stay the same, but your new commit wont belong to any branch and will be unreachable, except by the exact commit hash. Thus, if you need to make changes - you will generally want to create a branch.
+> git checkout `<tagname>` puts your repository in "detached head" state. In "detached HEAD" state, if you make changes and then created a commit, the tag will stay the same, but your new commit wont belong to any branch and will be unreachable, except by the exact commit hash. **Thus, if you need to make changes - you will generally want to create a branch.**
 
 `git checkout -b <branchname> <tagname>`
+
+## Git Aliases
+
+How to set up git Aliases
+
+`git config --global alias.co checkout`
