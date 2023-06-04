@@ -1,3 +1,6 @@
+---
+date created: 2023-06-04 08:19
+---
 
 # Popular Notations is Complexity Analysis of Algorithms
 
@@ -7,17 +10,18 @@
 - maximum amount of time an algorithm requires to consider all input values
 
 ## Omega Notation
+
 - Best case
 - Minimum amount of time
 
 ## Theta Notation
-- Average case
 
+- Average case
 
 ## Measurement of Complexity of an Algorithm
 
 1. Worst Case Analysis
-	1. Upper bound on the running time
+   1. Upper bound on the running time
 2. Best Case Analysis
 3. Average Case Analysis
 
@@ -50,7 +54,7 @@ console.log(x + " is present at index " + search(arr, n, x));
 ```
 
 > [!output]+ Output
->  30 is present at index 2
+> 30 is present at index 2
 
 Time Complexity Analysis
 

@@ -1,3 +1,8 @@
+---
+date created: 2023-06-04 08:16
+date updated: 2023-06-04 08:17
+---
+
 # Git Branching
 
 ## Branches in a Nutshell
@@ -56,7 +61,7 @@ show list of branches and last commit from each branch
 
 `git branch --merged`
 
-list it this branchs are merged branch. branch without \* is ok to delete
+list it this branchs are merged branch. branch without * is ok to delete
 
 `git branch --no-merged`
 
