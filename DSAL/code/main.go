@@ -1,37 +1,55 @@
+// main package has examples shown
+// in Hands-On Data Structures and algorithms with Go book
 package main
 
+// importing fmt package
 import (
 	"fmt"
 )
 
-// IProcess interface
-type IProcess interface {
-	process()
+// IDrawShape interface
+type IDrawShape interface {
+	drawShape(x [5]float32, y [5]float32)
 }
 
-// Adaper struct
-type Adaper struct {
-	adaptee Adaptee
+// DrawShape struct
+type DrawShape struct{}
+
+// DrawShape struct has method draw Shape with float x and y coordinates
+func (drawShape DrawShape) drawShape(x [5]float32, y [5]float32) {
+	fmt.Println("Drawing Shape")
 }
 
-// Adapter class method process
-
-func (adapter Adaper) process() {
-	fmt.Println("Adapter process")
-	adapter.adaptee.convert()
+// IContour interace
+type IContour interface {
+	drawContour(x [5]float32, y [5]float32)
+	resizeByFactor(factor int)
 }
 
-// Adaptee Struct
-type Adaptee struct {
-	adapterType int
+// DrawContour struct
+type DrawContour struct {
+	x      [5]float32
+	y      [5]float32
+	shape  DrawShape
+	factor int
 }
 
-// Adaptee class method convert
-func (adaptee Adaptee) convert() {
-	fmt.Println("Adaptee convert method")
+// DrawContour method drawContour given the coordinates
+func (contour DrawContour) drawContour(x [5]float32, y [5]float32) {
+	fmt.Println("Drawing Contour")
+	contour.shape.drawShape(contour.x, contour.y)
 }
 
+// DrawContour method resizeByFactor given factor
+func (contour DrawContour) resizeByFactor(factor int) {
+	contour.factor = factor
+}
+
+// main method
 func main() {
-	var processor IProcess = Adaper{}
-	processor.process()
+	var x = [5]float32{1, 2, 3, 4, 5}
+	var y = [5]float32{1, 2, 3, 4, 5}
+	var contour IContour = DrawContour{x, y, DrawShape{}, 2}
+	contour.drawContour(x, y)
+	contour.resizeByFactor(2)
 }
