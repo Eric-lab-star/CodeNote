@@ -12,6 +12,12 @@ type IDrawShape interface {
 	drawShape(x [5]float32, y [5]float32)
 }
 
+type DrawShape2 struct{}
+
+func (DrawShape2) drawShape(x [5]float32, y [5]float32) {
+	fmt.Println("Drawing Shape2")
+}
+
 // DrawShape struct
 type DrawShape struct{}
 
@@ -26,11 +32,13 @@ type IContour interface {
 	resizeByFactor(factor int)
 }
 
+// DrawContour method resizeByFactor given factor
+
 // DrawContour struct
 type DrawContour struct {
 	x      [5]float32
 	y      [5]float32
-	shape  DrawShape
+	shape  IDrawShape
 	factor int
 }
 
