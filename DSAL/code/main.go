@@ -1,43 +1,37 @@
 package main
 
 import (
-	"container/heap"
 	"fmt"
 )
 
-type IntegerHeap []int
-
-func (iheap IntegerHeap) Len() int {
-	return len(iheap)
-}
-func (iheap IntegerHeap) Less(i, j int) bool {
-	return iheap[i] < iheap[j]
-}
-func (iheap IntegerHeap) Swap(i, j int) {
-	iheap[i], iheap[j] = iheap[j], iheap[i]
+// IProcess interface
+type IProcess interface {
+	process()
 }
 
-func (iheap *IntegerHeap) Push(heapintf interface{}) {
-	*iheap = append(*iheap, heapintf.(int))
+// Adaper struct
+type Adaper struct {
+	adaptee Adaptee
 }
 
-func (iheap *IntegerHeap) Pop() interface{} {
-	var n int
-	var x1 int
-	var previous IntegerHeap = *iheap
-	n = len(previous)
-	x1 = previous[n-1]
-	*iheap = previous[0 : n-1]
-	return x1
+// Adapter class method process
+
+func (adapter Adaper) process() {
+	fmt.Println("Adapter process")
+	adapter.adaptee.convert()
+}
+
+// Adaptee Struct
+type Adaptee struct {
+	adapterType int
+}
+
+// Adaptee class method convert
+func (adaptee Adaptee) convert() {
+	fmt.Println("Adaptee convert method")
 }
 
 func main() {
-	intHeap := &IntegerHeap{1, 4, 5}
-	fmt.Println(intHeap)
-	heap.Init(intHeap)
-	heap.Push(intHeap, 2)
-	fmt.Printf("minimum: %d\n", (*intHeap)[0])
-	for intHeap.Len() > 0 {
-		fmt.Printf("%d \n", heap.Pop(intHeap))
-	}
+	var processor IProcess = Adaper{}
+	processor.process()
 }
