@@ -1,17 +1,14 @@
 package main
 
 import (
-	"container/list"
 	"fmt"
 )
 
 func main() {
-	var intList = list.List{}
-	intList.PushBack(11)
-	intList.PushBack(23)
-	intList.PushBack(34)
+	square, cube := powerSeries(3)
+	fmt.Println(square, cube)
+}
 
-	for el := intList.Front(); el != nil; el = el.Next() {
-		fmt.Println(el.Value.(int))
-	}
+func powerSeries(a int) (int, int) {
+	return a * a, a * a * a
 }
