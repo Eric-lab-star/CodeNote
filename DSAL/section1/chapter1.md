@@ -4,7 +4,7 @@
 
 - Linear
   lists/ sets/ tuples/ queues/ stacks/ heap
-- Non-Linera
+- Non-Liner
   Trees/ tables/ containers
 - Homogenous
   2d arrays/ MultiDArray

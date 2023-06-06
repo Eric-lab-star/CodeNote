@@ -1,4 +1,3 @@
-// Heap
 package main
 
 import (
@@ -7,32 +6,28 @@ import (
 )
 
 func main() {
-	var intHeap *IntegerHeap = &IntegerHeap{1, 9, 4}
-	heap.Init(intHeap)
-	heap.Push(intHeap, 2)
-	fmt.Printf("minimum: %d\n", (*intHeap)[0])
-	for intHeap.Len() > 0 {
-		fmt.Printf("%d \n", heap.Pop(intHeap))
-	}
+	h := &iHeap{3, 6, 2}
+	heap.Init(h)
+	heap.Push(h, 8)
+	min := heap.Pop(h)
+	fmt.Println(min)
 
 }
 
-type IntegerHeap []int
+type iHeap []int
 
-// implementing sort.Interface which is required for heap.Interface
-func (iheap IntegerHeap) Len() int           { return len(iheap) }          // length of iheap
-func (iheap IntegerHeap) Less(i, j int) bool { return iheap[i] > iheap[j] } //ascending order
-func (iheap IntegerHeap) Swap(i, j int)      { iheap[i], iheap[j] = iheap[j], iheap[i] }
+func (h iHeap) Len() int           { return len(h) }
+func (h iHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h iHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
 
-// implementing heap.Interface
-func (iheap *IntegerHeap) Push(heapintf interface{}) {
-	*iheap = append(*iheap, heapintf.(int))
+func (h *iHeap) Push(a interface{}) {
+	*h = append(*h, a.(int))
 }
 
-func (iheap *IntegerHeap) Pop() interface{} {
-	previous := *iheap
-	n := len(previous)
-	x1 := previous[n-1]
-	*iheap = previous[0 : n-1]
-	return x1
+func (h *iHeap) Pop() interface{} {
+	n := len(*h)
+	prev := *h
+	x := (*h)[n-1]
+	*h = prev[:n-1]
+	return x
 }
