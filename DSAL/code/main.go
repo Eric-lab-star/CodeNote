@@ -1,18 +1,12 @@
+// Tuples
 package main
 
-import (
-	"container/list"
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	intList := list.New()
-	intList.PushBack(1)
-	intList.PushBack(2)
-	intList.PushBack(3)
-	intList.PushBack(4)
+	fmt.Println(timeTable(2))
+}
 
-	for el := intList.Front(); el != nil; el = el.Next() {
-		fmt.Println(el.Value.(int))
-	}
+func timeTable(a int) (int, int) {
+	return a, a * 2
 }

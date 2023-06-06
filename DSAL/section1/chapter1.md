@@ -16,3 +16,11 @@
 ## List, Tuples and Heaps
 
 ### Lists
+
+    A lists is sequence of elements.
+    Each element can be connected to another with a link.
+    List have a variable length and developer can remove or add elements more easily
+
+### Tuples
+
+Tuples are typically immutable sequential collections.
