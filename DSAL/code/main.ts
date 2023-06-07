@@ -1,39 +1,31 @@
-// adapter
+// bridge pattern
 
-//target
-class Target {
-  public request() {
-    console.log("printing target");
+class Abstraction {
+  private implementation: Implemention;
+  constructor(printer: Implemention) {
+    this.implementation = printer;
+  }
+  public print() {
+    this.implementation.Print();
   }
 }
 
-const target = new Target();
+interface Implemention {
+  Print(): void;
+}
 
-class Adapter extends Target {
-  private adaptee: Adaptee;
-  constructor(adaptee: Adaptee) {
-    super();
-    this.adaptee = adaptee;
-  }
-  public request() {
-    this.adaptee.AdapteeRequest();
+class mac extends Abstraction {
+  constructor(printer: Implemention) {
+    super(printer);
   }
 }
 
-class Adaptee {
-  constructor() {}
-  public AdapteeRequest() {
-    console.log("pirint Adaptee");
+class php implements Implemention {
+  public Print(): void {
+    console.log("printing files from php");
   }
 }
+const printer = new php();
+const pc = new mac(printer);
 
-function Client(target: Target) {
-  target.request();
-}
-
-const adaptee = new Adaptee();
-const adapter = new Adapter(adaptee);
-
-Client(adapter);
-
-Client(target);
+pc.print();
