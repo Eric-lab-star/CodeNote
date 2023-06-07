@@ -1,58 +1,46 @@
-// Bridge Pattern
+// composite pattern
+// folders and files
 package main
 
 import "fmt"
 
+type searcher interface{
+	search()
+}      
+
+type file struct{
+	name string
+}
+
+func (f file) search(){
+	fmt.Println(f.name)	
+}
+
+type folder struct{
+	searchers []searcher
+	name string
+}
+
+func (f folder) search(){
+	fmt.Println(f.name)
+	for _, searcher := range f.searchers{
+		searcher.search()
+	}
+}
+
+func (f *folder) add( searcher ...searcher){
+	f.searchers = append(f.searchers, searcher...)
+}
+
 func main(){
-	pc := mac{file:"file from mac"}
-	p := &cannon{}
-	pc.setPrinter(*p)
-	pc.print()
-	mobile := iphone{file:"file from mobile"}
-	mobile.setPrinter(p)
-	mobile.print()
+	root := folder{name: "root"}	
+	file1 := file{name: "file1"}
+	file2 := file{name: "file2"}
+	file3 := file{name: "file3"}
+	file4 := file{name: "file4"}
+	dir1 := folder{name: "dir1"}
+	dir2 := folder{name: "dir2"}
+	dir1.add(file3, file4)
+	root.add(file1, file2, dir1, dir2)	
+	root.search()
 }
-
-// abstraction
-type computer interface{
-	print() // calls Printer.printFile
-	setPrinter(Printer)
-}
-// refinced abstraction
-type mac struct{
-	file string
-	printer Printer
-}
-
-func (mac mac) print(){
-	mac.printer.printFile(mac.file)
-}
-
-func (mac *mac) setPrinter(printer Printer){
-	mac.printer = printer
-}
-
-type iphone struct{
-	file string
-	printer Printer
-} 
-
-func (i iphone) print(){
-	i.printer.printFile(i.file)
-}
-
-func (i *iphone) setPrinter(p Printer){
-	i.printer = p
-}
-// Implementaion
-type Printer interface{
-	printFile(string)
-}
-
-// concrete implementation
-type cannon struct{}
-
-func (c cannon) printFile(file string){
-	fmt.Println(file)	
-}
-
