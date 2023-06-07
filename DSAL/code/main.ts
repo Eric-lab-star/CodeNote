@@ -1,31 +1,38 @@
-// bridge pattern
+// composite
 
-class Abstraction {
-  private implementation: Implemention;
-  constructor(printer: Implemention) {
-    this.implementation = printer;
+abstract class Searcher {
+  protected name: string;
+  constructor(name: string) {
+    this.name = name;
   }
-  public print() {
-    this.implementation.Print();
+  abstract search(): void;
+}
+class Leaf extends Searcher {
+  constructor(name: string) {
+    super(name);
   }
-}
-
-interface Implemention {
-  Print(): void;
-}
-
-class mac extends Abstraction {
-  constructor(printer: Implemention) {
-    super(printer);
+  public search(): void {
+    console.log(this.name);
   }
 }
 
-class php implements Implemention {
-  public Print(): void {
-    console.log("printing files from php");
+class Tree extends Searcher {
+  public searchers: Searcher[] = [];
+  constructor(name: string) {
+    super(name);
+  }
+  public search(): void {
+    this.searchers.forEach((s) => s.search());
+  }
+
+  public add(...i: Searcher[]) {
+    this.searchers = [...this.searchers, ...i];
   }
 }
-const printer = new php();
-const pc = new mac(printer);
 
-pc.print();
+const file1 = new Leaf("file1");
+const file2 = new Leaf("file2");
+
+const tree = new Tree("Tree");
+tree.add(file1, file2);
+tree.search();

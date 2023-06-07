@@ -1,4 +1,4 @@
-// bridge pattern
+// composite
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14,30 +14,52 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var Abstraction = /** @class */ (function () {
-    function Abstraction(printer) {
-        this.implementation = printer;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
     }
-    Abstraction.prototype.print = function () {
-        this.implementation.Print();
-    };
-    return Abstraction;
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+var Searcher = /** @class */ (function () {
+    function Searcher(name) {
+        this.name = name;
+    }
+    return Searcher;
 }());
-var mac = /** @class */ (function (_super) {
-    __extends(mac, _super);
-    function mac(printer) {
-        return _super.call(this, printer) || this;
+var Leaf = /** @class */ (function (_super) {
+    __extends(Leaf, _super);
+    function Leaf(name) {
+        return _super.call(this, name) || this;
     }
-    return mac;
-}(Abstraction));
-var php = /** @class */ (function () {
-    function php() {
-    }
-    php.prototype.Print = function () {
-        console.log("printing files from php");
+    Leaf.prototype.search = function () {
+        console.log(this.name);
     };
-    return php;
-}());
-var printer = new php();
-var pc = new mac(printer);
-pc.print();
+    return Leaf;
+}(Searcher));
+var Tree = /** @class */ (function (_super) {
+    __extends(Tree, _super);
+    function Tree(name) {
+        var _this = _super.call(this, name) || this;
+        _this.searchers = [];
+        return _this;
+    }
+    Tree.prototype.search = function () {
+        this.searchers.forEach(function (s) { return s.search(); });
+    };
+    Tree.prototype.add = function () {
+        var i = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            i[_i] = arguments[_i];
+        }
+        this.searchers = __spreadArray(__spreadArray([], this.searchers, true), i, true);
+    };
+    return Tree;
+}(Searcher));
+var file1 = new Leaf("file1");
+var file2 = new Leaf("file2");
+var tree = new Tree("Tree");
+tree.add(file1, file2);
+tree.search();
