@@ -5,34 +5,35 @@ import (
 	"fmt"
 )
 
-func main() {
-	mac := mac{}
-	window := window{}
-	client := client{}
-	client.Adapter(mac)
-	client.Adapter(window)
+func main(){
+	c := &Client{}
+	window := &Windows{}
+	adapter := WindowsAdapter{window}
+	c.insertLighteningIntoComputer(&adapter)
 
 }
-
-type client struct{}
-func (client client) Adapter(machine interface{}) {
-	switch v := machine.(type) {
-	case mac:
-		v.insertIntoLighting()
-	case window:
-		v.insertIntoUSB()
-	}
+type Client struct{
 }
 
-
-type mac struct{}
-
-func (mac mac) insertIntoLighting() {
-	fmt.Println("Mac is ready to use")
+func (c *Client) insertLighteningIntoComputer(com computer){
+	fmt.Println("client inserts connecter into computer")
 }
 
-type window struct{}
-
-func (win window) insertIntoUSB() {
-	fmt.Println("Window is ready to use")
+type computer interface{
+	InsertIntoLightningPort()
 }
+
+type Windows struct{}
+ func (w *Windows) insertIntoUSBPort(){
+	 fmt.Println("USB connector is plugged into windows machine")
+ }
+
+ type WindowsAdapter struct {
+    windowMachine *Windows
+}
+
+func (w *WindowsAdapter) InsertIntoLightningPort() {
+    fmt.Println("Adapter converts Lightning signal to USB.")
+    w.windowMachine.insertIntoUSBPort()
+}
+
