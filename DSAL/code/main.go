@@ -1,33 +1,52 @@
+// Adapter pattern
 package main
 
 import (
-	"container/heap"
 	"fmt"
+
 )
 
-func main() {
-	h := &iHeap{3, 6, 2}
-	heap.Init(h)
-	heap.Push(h, 8)
-	min := heap.Pop(h)
-	fmt.Println(min)
-
+func main(){
+	mac := mac{}		
+	window := window{}
+	windowsAdapter := windowsAdapter{
+		window,
+	}
+	client := client{}
+	client.lighteningPortOnlyComp(mac)
+	client.lighteningPortOnlyComp(windowsAdapter)
 }
 
-type iHeap []int
+type client struct{}
 
-func (h iHeap) Len() int           { return len(h) }
-func (h iHeap) Less(i, j int) bool { return h[i] < h[j] }
-func (h iHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-
-func (h *iHeap) Push(a interface{}) {
-	*h = append(*h, a.(int))
+func (c client) lighteningPortOnlyComp(comp comp){
+	fmt.Println("conntecting lightening port...\n. \n. \n.")
+	comp.insertIntoLighting()
 }
 
-func (h *iHeap) Pop() interface{} {
-	n := len(*h)
-	prev := *h
-	x := (*h)[n-1]
-	*h = prev[:n-1]
-	return x
+
+type comp interface {
+	insertIntoLighting()
+}
+
+type mac struct{}
+
+func (mac mac) insertIntoLighting(){
+	fmt.Println("Mac is ready to use")
+}
+
+type window struct{}
+
+func (win window) insertIntoUSB(){
+	fmt.Println("Window is ready to use")
+}
+
+
+type windowsAdapter struct{
+	windwo window
+}
+
+func (windowAdapter windowsAdapter) insertIntoLighting(){
+	fmt.Println("processing window Adapter")
+	windowAdapter.windwo.insertIntoUSB()
 }
