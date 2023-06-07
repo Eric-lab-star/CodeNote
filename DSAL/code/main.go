@@ -1,39 +1,58 @@
-// Adapter pattern
+// Bridge Pattern
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main(){
-	c := &Client{}
-	window := &Windows{}
-	adapter := WindowsAdapter{window}
-	c.insertLighteningIntoComputer(&adapter)
-
-}
-type Client struct{
-}
-
-func (c *Client) insertLighteningIntoComputer(com computer){
-	fmt.Println("client inserts connecter into computer")
+	pc := mac{file:"file from mac"}
+	p := &cannon{}
+	pc.setPrinter(*p)
+	pc.print()
+	mobile := iphone{file:"file from mobile"}
+	mobile.setPrinter(p)
+	mobile.print()
 }
 
+// abstraction
 type computer interface{
-	InsertIntoLightningPort()
+	print() // calls Printer.printFile
+	setPrinter(Printer)
+}
+// refinced abstraction
+type mac struct{
+	file string
+	printer Printer
 }
 
-type Windows struct{}
- func (w *Windows) insertIntoUSBPort(){
-	 fmt.Println("USB connector is plugged into windows machine")
- }
-
- type WindowsAdapter struct {
-    windowMachine *Windows
+func (mac mac) print(){
+	mac.printer.printFile(mac.file)
 }
 
-func (w *WindowsAdapter) InsertIntoLightningPort() {
-    fmt.Println("Adapter converts Lightning signal to USB.")
-    w.windowMachine.insertIntoUSBPort()
+func (mac *mac) setPrinter(printer Printer){
+	mac.printer = printer
+}
+
+type iphone struct{
+	file string
+	printer Printer
+} 
+
+func (i iphone) print(){
+	i.printer.printFile(i.file)
+}
+
+func (i *iphone) setPrinter(p Printer){
+	i.printer = p
+}
+// Implementaion
+type Printer interface{
+	printFile(string)
+}
+
+// concrete implementation
+type cannon struct{}
+
+func (c cannon) printFile(file string){
+	fmt.Println(file)	
 }
 
