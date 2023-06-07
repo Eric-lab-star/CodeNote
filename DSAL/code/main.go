@@ -1,33 +1,46 @@
+// composite pattern
+// folders and files
 package main
 
-import (
-	"container/heap"
-	"fmt"
-)
+import "fmt"
 
-func main() {
-	h := &iHeap{3, 6, 2}
-	heap.Init(h)
-	heap.Push(h, 8)
-	min := heap.Pop(h)
-	fmt.Println(min)
+type searcher interface{
+	search()
+}      
 
+type file struct{
+	name string
 }
 
-type iHeap []int
-
-func (h iHeap) Len() int           { return len(h) }
-func (h iHeap) Less(i, j int) bool { return h[i] < h[j] }
-func (h iHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-
-func (h *iHeap) Push(a interface{}) {
-	*h = append(*h, a.(int))
+func (f file) search(){
+	fmt.Println(f.name)	
 }
 
-func (h *iHeap) Pop() interface{} {
-	n := len(*h)
-	prev := *h
-	x := (*h)[n-1]
-	*h = prev[:n-1]
-	return x
+type folder struct{
+	searchers []searcher
+	name string
+}
+
+func (f folder) search(){
+	fmt.Println(f.name)
+	for _, searcher := range f.searchers{
+		searcher.search()
+	}
+}
+
+func (f *folder) add( searcher ...searcher){
+	f.searchers = append(f.searchers, searcher...)
+}
+
+func main(){
+	root := folder{name: "root"}	
+	file1 := file{name: "file1"}
+	file2 := file{name: "file2"}
+	file3 := file{name: "file3"}
+	file4 := file{name: "file4"}
+	dir1 := folder{name: "dir1"}
+	dir2 := folder{name: "dir2"}
+	dir1.add(file3, file4)
+	root.add(file1, file2, dir1, dir2)	
+	root.search()
 }
