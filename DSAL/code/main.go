@@ -1,46 +1,44 @@
-// composite pattern
-// folders and files
 package main
 
 import "fmt"
 
-type searcher interface{
-	search()
-}      
-
-type file struct{
-	name string
+type IPizza interface {
+	getPrice() int
 }
 
-func (f file) search(){
-	fmt.Println(f.name)	
+type VeggeMania struct {
 }
 
-type folder struct{
-	searchers []searcher
-	name string
+func (p *VeggeMania) getPrice() int {
+	return 15
 }
 
-func (f folder) search(){
-	fmt.Println(f.name)
-	for _, searcher := range f.searchers{
-		searcher.search()
+type TomatoTopping struct {
+	pizza IPizza
+}
+
+func (c *TomatoTopping) getPrice() int {
+	pizzaPrice := c.pizza.getPrice()
+	return pizzaPrice + 7
+}
+
+type CheeseTopping struct {
+	pizza IPizza
+}
+
+func (c *CheeseTopping) getPrice() int {
+	pizzaPrice := c.pizza.getPrice()
+	return pizzaPrice + 10
+}
+
+func main() {
+	pizza := &VeggeMania{}
+	pizzawithChese := &CheeseTopping{
+		pizza: pizza,
 	}
-}
+	pizzaWithCheseandTomato := &TomatoTopping{
+		pizza: pizzawithChese,
+	}
 
-func (f *folder) add( searcher ...searcher){
-	f.searchers = append(f.searchers, searcher...)
-}
-
-func main(){
-	root := folder{name: "root"}	
-	file1 := file{name: "file1"}
-	file2 := file{name: "file2"}
-	file3 := file{name: "file3"}
-	file4 := file{name: "file4"}
-	dir1 := folder{name: "dir1"}
-	dir2 := folder{name: "dir2"}
-	dir1.add(file3, file4)
-	root.add(file1, file2, dir1, dir2)	
-	root.search()
+	fmt.Println(pizzaWithCheseandTomato.getPrice())
 }
