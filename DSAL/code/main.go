@@ -1,46 +1,39 @@
-// composite pattern
-// folders and files
 package main
 
 import "fmt"
 
-type searcher interface{
-	search()
-}      
-
-type file struct{
-	name string
+type Computer interface {
+	Print()
+	SetPrinter(Printer)
 }
 
-func (f file) search(){
-	fmt.Println(f.name)	
+type Mac struct {
+	printer Printer
 }
 
-type folder struct{
-	searchers []searcher
-	name string
+func (m *Mac) Print() {
+	fmt.Println("Print request for mac")
+	m.printer.PrintFile()
 }
 
-func (f folder) search(){
-	fmt.Println(f.name)
-	for _, searcher := range f.searchers{
-		searcher.search()
-	}
+func (m *Mac) SetPrinter(p Printer) {
+	m.printer = p
 }
 
-func (f *folder) add( searcher ...searcher){
-	f.searchers = append(f.searchers, searcher...)
+type Printer interface {
+	PrintFile()
 }
 
-func main(){
-	root := folder{name: "root"}	
-	file1 := file{name: "file1"}
-	file2 := file{name: "file2"}
-	file3 := file{name: "file3"}
-	file4 := file{name: "file4"}
-	dir1 := folder{name: "dir1"}
-	dir2 := folder{name: "dir2"}
-	dir1.add(file3, file4)
-	root.add(file1, file2, dir1, dir2)	
-	root.search()
+type Epson struct {
+}
+
+func (p *Epson) PrintFile() {
+	fmt.Println("Printing by a Epson printer")
+}
+
+func main() {
+	mac := new(Mac)
+	epson := new(Epson)
+	mac.SetPrinter(epson)
+	mac.Print()
 }
