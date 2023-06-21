@@ -16,8 +16,8 @@
     - name of the class and file must match
     - main method must be `public static void main(String[] args){}`
 
-3. run `javaC Hello.java` in terminal to created compiled java.class file
+3. run `javac Hello.java` in terminal to created compiled java.class file
 4. run `java Hello` in terminal to execute file
 
-javaC is java compiler and java is executes file
+javac is java compiler and java is executes file
 name of public class must be same with file name
