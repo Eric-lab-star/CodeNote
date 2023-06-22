@@ -35,3 +35,17 @@ float 타입을 선언할 때는 f 접미사를 표기해야한다.
 ## 진수 바꾸기
 
 2진수를 8진수로 변환하려면, 2진수를 뒤에서 부터 3자리씩 끊어서 그에 새당하는 8진수로 바꾸면 된다.
+
+```java
+
+class Hello {
+	public static void main(String[] args) {
+
+		int bin = 0b1010101100;
+		System.out.printf("%d%n", bin);
+		System.out.printf("%x%n", bin); //16진수
+		System.out.printf("%o%n", bin); //8진수
+	}
+}
+
+```
