@@ -1,0 +1,3 @@
+/Users/kyungsubkim/codenote/cpp/build/CMakeFiles/Hello.dir
+/Users/kyungsubkim/codenote/cpp/build/CMakeFiles/edit_cache.dir
+/Users/kyungsubkim/codenote/cpp/build/CMakeFiles/rebuild_cache.dir
