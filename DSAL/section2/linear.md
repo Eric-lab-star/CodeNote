@@ -26,3 +26,17 @@ type LinkedList struct{
     headNode *Node
 }
 ```
+
+#### AddToHead method
+
+```go
+func (linkedList *LinkedList) AddToHead(property int){
+    var node = Node{}
+    node.property = property
+    if node.nextNode != nil{
+        node.nextNode = linkedList.headNode
+
+    }
+    linkedLists.headNode = &node
+}
+```
