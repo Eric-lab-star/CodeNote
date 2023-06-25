@@ -1,74 +1,75 @@
 package main
 
-import (
-	"database/sql"
-	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-)
+import "fmt"
 
-// Customer struct  
-type Customer struct {
-	CustomerId   int
-	CustomerName string
-	SSN          string
+type Node struct{
+	property int
+	nextNode *Node
 }
 
-// get connection method which returns sql.DB
-func GetConnection() (database *sql.DB) {
-	databaseDriver := "mysql"
-	databaseUser := "root"
-	databseName := "crm"
-	database, error := sql.Open(databaseDriver, databaseUser+":@/"+databseName)
-	if error != nil {
-		panic(error.Error())
-	}
-	return database
+type LinkedList struct{
+	headNode *Node
 }
 
-//Get Customer method returns Customer Array
-
-func GetCustomers() []Customer {
-	var database *sql.DB
-	database = GetConnection()
-	rows, error := database.Query("Select * from Customer order by CustomerId desc")
-	if error != nil {
-		panic(error.Error())
+func (linkedList *LinkedList) AddToHead(property int){
+	node := Node{}
+	node.property = property
+	if node.nextNode != nil{
+		node.nextNode = linkedList.headNode
 	}
-	var customer Customer
-	customer = Customer{}
-	customers := []Customer{}
-	for rows.Next() {
-		var customerId int
-		var customerName string
-		var ssn string
-		error = rows.Scan(&customerId, &customerName, &ssn)
-		if error != nil {
-			panic(error.Error())
+	linkedList.headNode = &node
+}
+func (linkedList *LinkedList) IterateList(){
+	for node := linkedList.headNode; node != nil; node = node.nextNode{
+		fmt.Println(node.property)
+	}
+}
+
+func (linkedList *LinkedList) LastNode() *Node{
+	lastNode := &Node{}
+	for node := linkedList.headNode; node != nil; node = node.nextNode{
+		if node.nextNode == nil{
+			lastNode = node
 		}
-		customer.CustomerId = customerId
 	}
-	defer database.Close()
-	return customers
+	return lastNode
 }
 
-// InsertCustomer method with parameter customer
-func InsertCustomer(customer Customer) {
-	var database *sql.DB
-	database = GetConnection()
 
-	var error error
-	var insert *sql.Stmt
-	insert, error = database.Prepare("INSERT INTO CUSTOMER(CustomerName,SSN) VALUES(?,?)")
-	if error != nil {
-		panic(error.Error())
+func (linkedList *LinkedList)AddToEnd(property int){
+	node := &Node{property: property, nextNode: nil}
+	lastNode :=	linkedList.LastNode()
+	if lastNode != nil {
+		lastNode.nextNode = node
 	}
-	insert.Exec(customer.CustomerName, customer.SSN)
-
-	defer database.Close()
-
+}
+func (linkedList *LinkedList) NodeWithValue(property int) *Node{
+	nodeWith := &Node{}
+	for node := linkedList.headNode; node!= nil; node = node.nextNode{
+		if node.property == property{
+			nodeWith = node
+			return nodeWith
+		}
+	}
+	return nodeWith
+	
+}
+func (linkedList *LinkedList) AddAfter(nodeProperty int, property int){
+	node := &Node{
+		property: property,
+	}
+	nodeWith := linkedList.NodeWithValue(nodeProperty)
+	if nodeWith != nil{
+		node.nextNode = nodeWith.nextNode
+		nodeWith.nextNode = node
+	}
+}
+func main(){
+	linkedList := LinkedList{}		
+	linkedList.AddToHead(1)
+	linkedList.AddToEnd(3)
+	linkedList.AddAfter(1,8)
+	linkedList.IterateList()
 }
 
-func main() {
-	customers := GetCustomers()
-	fmt.Println("Customers", customers)
-}
+
