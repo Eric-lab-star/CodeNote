@@ -46,9 +46,6 @@ func GetCustomers() []Customer {
 			panic(error.Error())
 		}
 		customer.CustomerId = customerId
-		customer.CustomerName = customerName
-		customer.SSN = ssn
-		customers = append(customers, customer)
 	}
 	defer database.Close()
 	return customers
