@@ -40,3 +40,75 @@ func (linkedList *LinkedList) AddToHead(property int){
     linkedLists.headNode = &node
 }
 ```
+
+### Doubly linked List
+
+In a doubly linked list, ass nodes have a pointer to the node they are connected to on either side of them. This means that each node is connected to two nodes, and we can traverse forward through to the next node or backward through to the previous node.
+
+```go
+type Node struct{
+    property int
+    nextNode *Node
+    previousNode *Node
+}
+```
+
+#### NodeBetweenValues Method
+
+```go
+func (linkedList *LinkedList) NodeBetweenValues(firstProperty, secondProperty int) *Node{
+    for node := linkedList.headNode; node != nil; node = node.nextNode{
+        if node.previousNode != nil && node.nextNode != nil{
+            if node.previousNode.property == firstProperty && node.nextNode.property == secondProperty{
+                return node
+            }
+        }
+    }
+    return nil
+}
+```
+
+#### AddToHead method
+
+```go
+func (linkedList *LinkedList) AddToHead(property int){
+    node := &Node{
+          property: property,
+          }
+    if linkedList.headNode != nil{
+        node.nextNode = linkedList.headNode
+        linkedList.headNode.previousNode = node
+    }
+    linkedList.headNode = node
+}
+```
+
+#### AddAfter method
+
+Addafter method adds a node after a specific node to a double linked list.
+
+```go
+func (linkedList *LinkedList ) AddAfter(nodeProperty, prop in){
+    node := &Node{property: prop}
+    nodeWith := linkedList.NodeWithValue(nodeProperty)
+    if nodeWith != nil{
+        node.nextNode = nodeWith.nextNode
+        node.previousNode = nodeWith
+        nodeWith.nextNode = node
+    }
+}
+```
+
+
+#### AddToEnd method
+
+```go
+func (linkedList *LinkedList) AddToend(property int){
+    node := &Node{property, nil, nil}
+    lastNode := linkedList.LastNode()
+    if lastNode != nil{
+        lastNode.nextNode = node
+        node.previousNode = lastNode
+    }
+}
+```

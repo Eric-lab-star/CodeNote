@@ -2,35 +2,33 @@ package main
 
 import "fmt"
 
+type Node struct {
+	property int
+	nextNode *Node
+	prevNode *Node
+}
 type LinkedList struct {
 	headNode *Node
 }
 
-func (linkedList *LinkedList) AddToHead(prop int) {
-	node := &Node{prop, nil}
-	linkedList.headNode = node
-}
-
-func (linkedList *LinkedList) IterateList() {
+func (linkedList *LinkedList) NodeBetweenValues(firstProperty, secondProperty int) *Node {
 	for node := linkedList.headNode; node != nil; node = node.nextNode {
-		fmt.Println(node.property)
-	}
-}
-
-func (linkedList *LinkedList) LastNode() *Node {
-	for node := linkedList.headNode; node != nil; node = node.nextNode {
-		if node.nextNode == nil {
-			return node
+		if node.nextNode != nil && node.prevNode != nil {
+			if node.nextNode.property == secondProperty && node.prevNode.property == firstProperty {
+				return node
+			}
 		}
 	}
-	return &Node{}
+	return nil
 }
 
-func (linkedList *LinkedList) AddToEnd(prop int) {
-	node := linkedList.LastNode()
-	if node != nil {
-		node.nextNode = &Node{prop, nil}
+func (linkedList *LinkedList) AddToHead(prop int) {
+	node := &Node{property: prop}
+	if linkedList.headNode != nil {
+		node.nextNode = linkedList.headNode
+		linkedList.headNode.prevNode = node
 	}
+	linkedList.headNode = node
 }
 
 func (linkedList *LinkedList) NodeWithValue(prop int) *Node {
@@ -43,15 +41,37 @@ func (linkedList *LinkedList) NodeWithValue(prop int) *Node {
 }
 
 func (linkedList *LinkedList) AddAfter(nodeProp, prop int) {
-	node := &Node{prop, nil}
-	prevNode := linkedList.NodeWithValue(nodeProp)
-	node.nextNode = prevNode.nextNode
-	prevNode.nextNode = node
+	node := &Node{property: prop}
+	nodeWith := linkedList.NodeWithValue(nodeProp)
+	if nodeWith != nil {
+		node.nextNode = nodeWith.nextNode
+		node.prevNode = nodeWith
+		nodeWith.nextNode = node
+	}
 }
 
-type Node struct {
-	property int
-	nextNode *Node
+func (linkedList *LinkedList) LastNode() *Node {
+	for node := linkedList.headNode; node != nil; node = node.nextNode {
+		if node.nextNode == nil {
+			return node
+		}
+	}
+	return nil
+}
+
+func (linkedList *LinkedList) AddToEnd(prop int) {
+	node := &Node{prop, nil, nil}
+	lastNode := linkedList.LastNode()
+	if lastNode != nil {
+		lastNode.nextNode = node
+		node.prevNode = lastNode
+	}
+}
+
+func (linkedList *LinkedList) IterateList() {
+	for node := linkedList.headNode; node != nil; node = node.nextNode {
+		fmt.Println(node.property)
+	}
 }
 
 func main() {
@@ -59,7 +79,7 @@ func main() {
 	linkedList.AddToHead(1)
 	linkedList.AddToEnd(2)
 	linkedList.AddToEnd(3)
-	linkedList.AddAfter(2, 10)
-
+	node := linkedList.NodeBetweenValues(1, 3)
+	fmt.Println(node)
 	linkedList.IterateList()
 }
