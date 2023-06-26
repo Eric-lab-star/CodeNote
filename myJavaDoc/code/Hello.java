@@ -1,9 +1,7 @@
-
+// 정수형간의 형변환시 큰 값을 작은 값으로 변환하면 값손실이 발생한다.
 class Hello {
-	public static void main(String[] args) {
-		int bin = 0b1010101100;
-		System.out.printf("%d%n", bin);
-		System.out.printf("%x%n", bin);
-		System.out.printf("%o%n", bin);
-	}
+    public static void main(String[] args) {
+	double y = 1 << 3;
+	System.out.println(y);
+    }
 }
