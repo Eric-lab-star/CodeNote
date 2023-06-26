@@ -39,9 +39,19 @@ func (set *Set) InterSect(anotherSet *Set) *Set{
 }
 
 func (set *Set) Union (anotherSet *Set) *Set{
-	
+	unionSet := &Set{}	
+	unionSet.New()
+	for v := range set.integerMap{
+		unionSet.AddElement(v)
+	}
+	for v := range anotherSet.integerMap{
+		unionSet.AddElement(v)
+	}
+	return unionSet
 
 }
+
+
 func main(){
 	set1:= new(Set)
 	set1.New()
@@ -56,6 +66,8 @@ func main(){
 	set2.AddElement(6)
 	set2.AddElement(9)
 	set2.AddElement(12)
+	union := set1.Union(set2)
+	fmt.Println(union)
 
 	intersect:=	set1.InterSect(set2)
 	fmt.Println(intersect)
