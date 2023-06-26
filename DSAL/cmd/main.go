@@ -2,84 +2,63 @@ package main
 
 import "fmt"
 
-type Node struct {
-	property int
-	nextNode *Node
-	prevNode *Node
-}
-type LinkedList struct {
-	headNode *Node
+type Set struct{
+	integerMap map[int]bool
 }
 
-func (linkedList *LinkedList) NodeBetweenValues(firstProperty, secondProperty int) *Node {
-	for node := linkedList.headNode; node != nil; node = node.nextNode {
-		if node.nextNode != nil && node.prevNode != nil {
-			if node.nextNode.property == secondProperty && node.prevNode.property == firstProperty {
-				return node
-			}
-		}
-	}
-	return nil
+func (set *Set) New(){
+	set.integerMap = make(map[int]bool)
 }
 
-func (linkedList *LinkedList) AddToHead(prop int) {
-	node := &Node{property: prop}
-	if linkedList.headNode != nil {
-		node.nextNode = linkedList.headNode
-		linkedList.headNode.prevNode = node
-	}
-	linkedList.headNode = node
+func (set *Set) ContainElement(ele int) bool{
+	_, exists := set.integerMap[ele]
+	return exists
 }
 
-func (linkedList *LinkedList) NodeWithValue(prop int) *Node {
-	for node := linkedList.headNode; node != nil; node = node.nextNode {
-		if node.property == prop {
-			return node
-		}
-	}
-	return nil
-}
-
-func (linkedList *LinkedList) AddAfter(nodeProp, prop int) {
-	node := &Node{property: prop}
-	nodeWith := linkedList.NodeWithValue(nodeProp)
-	if nodeWith != nil {
-		node.nextNode = nodeWith.nextNode
-		node.prevNode = nodeWith
-		nodeWith.nextNode = node
+func (set *Set) AddElement(ele int){
+	if !set.ContainElement(ele){
+		set.integerMap[ele] = true
 	}
 }
 
-func (linkedList *LinkedList) LastNode() *Node {
-	for node := linkedList.headNode; node != nil; node = node.nextNode {
-		if node.nextNode == nil {
-			return node
-		}
-	}
-	return nil
+func (set *Set) deleteElement(ele int){
+	delete(set.integerMap, ele)
+
 }
 
-func (linkedList *LinkedList) AddToEnd(prop int) {
-	node := &Node{prop, nil, nil}
-	lastNode := linkedList.LastNode()
-	if lastNode != nil {
-		lastNode.nextNode = node
-		node.prevNode = lastNode
+func (set *Set) InterSect(anotherSet *Set) *Set{
+	intersectSet := new(Set)
+	intersectSet.New()
+	for v := range set.integerMap{
+		if anotherSet.ContainElement(v) {
+			intersectSet.AddElement(v)
+		}	
 	}
+	return intersectSet
+
 }
 
-func (linkedList *LinkedList) IterateList() {
-	for node := linkedList.headNode; node != nil; node = node.nextNode {
-		fmt.Println(node.property)
-	}
-}
+func (set *Set) Union (anotherSet *Set) *Set{
+	
 
-func main() {
-	linkedList := &LinkedList{}
-	linkedList.AddToHead(1)
-	linkedList.AddToEnd(2)
-	linkedList.AddToEnd(3)
-	node := linkedList.NodeBetweenValues(1, 3)
-	fmt.Println(node)
-	linkedList.IterateList()
+}
+func main(){
+	set1:= new(Set)
+	set1.New()
+	set1.AddElement(2)
+	set1.AddElement(4)
+	set1.AddElement(6)
+	set1.AddElement(8)
+
+	set2 := new(Set)
+	set2.New()
+	set2.AddElement(3)
+	set2.AddElement(6)
+	set2.AddElement(9)
+	set2.AddElement(12)
+
+	intersect:=	set1.InterSect(set2)
+	fmt.Println(intersect)
+	
+	
 }
