@@ -112,3 +112,63 @@ func (linkedList *LinkedList) AddToend(property int){
     }
 }
 ```
+### Sets
+
+A set is a linear data structure that has a collection of values that are not repeated. A set can store unique values without any particular order.
+
+```go
+type Set struct{
+    integerMap map[int]bool
+}
+
+func (set *Set) New(){
+    set.integerMap = make(map[int]bool)
+}
+```
+
+#### AddElement 
+
+```go
+func (set *Set) AddElement(element int){
+    if !set.ContainElement(element){
+        set.integerMap[element] = true
+    }
+}
+```
+
+#### DeletElement method
+
+```go
+func (set *Set) DeleteElement(element int){
+    delete(set.integerMap, element)
+}
+```
+
+#### ContainsElement 
+
+```go
+func (set *Set) ContainsElement(element in)bool{
+    _, exists := set.integerMap[element]
+    return exists
+
+```
+#### InterSect method
+
+```go
+func (set *Set) Intersect(anotherSet *Set) *Set{
+    intersectSet := &Set{}
+    interSectSet.New()
+    for v := range set.integerMap{
+        if anotherSet.ContainElement(value){
+            intersectSet.AddElement(value)
+        }
+    }
+    return intersectSet
+
+}
+```
+
+
+#### Union method
+
+
