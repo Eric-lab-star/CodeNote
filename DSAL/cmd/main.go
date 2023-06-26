@@ -1,20 +1,47 @@
 package main
 
-import "fmt"
 
 /*
-Tuples are finit orderd sequences of objects. They can contain a mixture of other data types and are used to group related data into a data structure. In a relational database, a tuple is a row of a table. Tuples have a fixed size compared to lists, and are also faster.
+Queues
+A queue consists of elements to be processed in a particular order or based on priority. A priotory-based queue of orders is shown in the following code, structured as a heap. Operations such as enqueue, dequeue, and peak can be performed on queue. Elements are added to the end and are removed from the start of the collection.
 */
 
-func h(x, y int) int{
-	return x*y
+type Queue []*Order
+
+type Order struct {
+	priority     int
+	quantity     int
+	product      string
+	customerName string
 }
 
-func g(l,m int) (x,y int){
-	x= 2*l
-	y=4*m
-	return
+// New method
+func (order *Order) New(priority int, quantity int, product string, customerName string) {
+	order = &Order{
+		priority:     priority,
+		quantity:     quantity,
+		product:      product,
+		customerName: customerName,
+	}
 }
-func main(){
-	fmt.Println(h(g(2,5)))
+
+// Add method adds the order to the queue
+func (queue *Queue) Add(order *Order) {
+	if len(*queue) == 0 {
+		*queue = append(*queue, order)
+	} else {
+		appended := false
+		for i, addedOrder := range *queue {
+			if order.priority > addedOrder.priority {
+				*queue = append((*queue)[:i], append(Queue{order}, (*queue)[i:]...)...)
+				appended = true
+			}
+		}
+		if !appended {
+			*queue = append(*queue, order)
+		}
+	}
 }
+
+// main method
+
