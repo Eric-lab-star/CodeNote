@@ -1,8 +1,11 @@
 #include <iostream>
 #include <string>
-
+using namespace std;
+using namespace std::string_literals;
 int main() {
-    long d = 1'000l;
-    std::cout << "Hello world!" << d;
+    const int a = 1;
+    const int b = 0b11111010;
+    const string s = "hello\n"s;
+    std::cout << s;
     return 0;
 }
