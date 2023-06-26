@@ -1,47 +1,105 @@
 package main
 
+// main package has examples shown
+// in Hands-On Data Structures and algorithms with Go book
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
 
-/*
-Queues
-A queue consists of elements to be processed in a particular order or based on priority. A priotory-based queue of orders is shown in the following code, structured as a heap. Operations such as enqueue, dequeue, and peak can be performed on queue. Elements are added to the end and are removed from the start of the collection.
-*/
+// constants
+const (
+	messagePassStart = iota
+	messageTicketStart
+	messagePassEnd
+	messageTicketEnd
+)
 
-type Queue []*Order
-
-type Order struct {
-	priority     int
-	quantity     int
-	product      string
-	customerName string
+// Queue class
+type Queue struct {
+	waitPass    int
+	waitTicket  int
+	playPass    bool
+	playTicket  bool
+	queuePass   chan int
+	queueTicket chan int
+	message     chan int
 }
 
-// New method
-func (order *Order) New(priority int, quantity int, product string, customerName string) {
-	order = &Order{
-		priority:     priority,
-		quantity:     quantity,
-		product:      product,
-		customerName: customerName,
+// New method initializes queue
+func (queue *Queue) New() {
+	queue.message = make(chan int)
+	queue.queuePass = make(chan int)
+	queue.queueTicket = make(chan int)
+}
+
+// StartTicketIssue starts the ticket issue
+func (Queue *Queue) StartTicketIssue() {
+	Queue.message <- messageTicketStart
+	<-Queue.queueTicket
+}
+
+// EndTicketIssue ends the ticket issue
+func (Queue *Queue) EndTicketIssue() {
+	Queue.message <- messageTicketEnd
+}
+
+// ticketIssue starts and ends the ticket issue
+func ticketIssue(Queue *Queue) {
+	for {
+		// Sleep up to 10 seconds.
+		time.Sleep(time.Duration(rand.Intn(10000)) * time.Millisecond)
+		Queue.StartTicketIssue()
+		fmt.Println("Ticket Issue starts")
+		// Sleep up to 2 seconds.
+		time.Sleep(time.Duration(rand.Intn(2000)) * time.Millisecond)
+		fmt.Println("Ticket Issue ends")
+		Queue.EndTicketIssue()
 	}
 }
 
-// Add method adds the order to the queue
-func (queue *Queue) Add(order *Order) {
-	if len(*queue) == 0 {
-		*queue = append(*queue, order)
-	} else {
-		appended := false
-		for i, addedOrder := range *queue {
-			if order.priority > addedOrder.priority {
-				*queue = append((*queue)[:i], append(Queue{order}, (*queue)[i:]...)...)
-				appended = true
-			}
-		}
-		if !appended {
-			*queue = append(*queue, order)
-		}
+// StartPass ends the Pass Queue
+func (Queue *Queue) StartPass() {
+	Queue.message <- messagePassStart
+	<-Queue.queuePass
+}
+
+// EndPass ends the Pass Queue
+func (Queue *Queue) EndPass() {
+	Queue.message <- messagePassEnd
+}
+
+// passenger method starts and ends the pass Queue
+func passenger(Queue *Queue) {
+	fmt.Println("starting the passenger Queue")
+	for {
+		 fmt.Println("starting the processing")
+		// Sleep up to 10 seconds.
+		time.Sleep(time.Duration(rand.Intn(10000)) * time.Millisecond)
+		Queue.StartPass()
+		fmt.Println(" Passenger starts")
+		// Sleep up to 2 seconds.
+		time.Sleep(time.Duration(rand.Intn(2000)) * time.Millisecond)
+		fmt.Println(" Passenger ends")
+		Queue.EndPass()
 	}
 }
 
 // main method
-
+func main() {
+	var Queue *Queue = &Queue{}
+	Queue.New()
+	fmt.Println(Queue)
+	var i int
+	for i = 0; i < 10; i++ {
+		 fmt.Println(i, "passenger in the Queue")
+		go passenger(Queue)
+	}
+	close(Queue.queuePass)
+	var j int
+	for j = 0; j < 5; j++ {
+		 fmt.Println(i, "ticket issued in the Queue")
+		go ticketIssue(Queue)
+	}
+}
