@@ -1,264 +1,202 @@
-// /main package has examples shown
-// in Go Data Structures and algorithms book
 package main
 
-// importing fmt package
-import (
-	"fmt"
-	"sync"
-)
+import "fmt"
 
-// TreeNode class
-type TreeNode struct {
-	key       int
-	value     int
-	leftNode  *TreeNode
-	rightNode *TreeNode
+type Node struct {
+	key   int
+	value int
+	left  *Node
+	right *Node
 }
 
-// BinarySearchTree class
-type BinarySearchTree struct {
-	rootNode *TreeNode
-	lock     sync.RWMutex
+type Tree struct {
+	root *Node
 }
 
-// InsertElement method
-func (tree *BinarySearchTree) InsertElement(key int, value int) {
-	tree.lock.Lock()
-	defer tree.lock.Unlock()
-	treeNode := &TreeNode{key, value, nil, nil}
-	if tree.rootNode == nil {
-		tree.rootNode = treeNode
-	} else {
-		insertTreeNode(tree.rootNode, treeNode)
-	}
+func (t *Tree) Search(value int) bool {
+	return search(t.root, value)
 }
 
-// insertTreeNode method
-func insertTreeNode(rootNode *TreeNode, newTreeNode *TreeNode) {
-	if newTreeNode.key < rootNode.key {
-		if rootNode.leftNode == nil {
-			rootNode.leftNode = newTreeNode
-		} else {
-			insertTreeNode(rootNode.leftNode, newTreeNode)
-		}
-	} else {
-		if rootNode.rightNode == nil {
-			rootNode.rightNode = newTreeNode
-		} else {
-			insertTreeNode(rootNode.rightNode, newTreeNode)
-		}
-	}
-}
-
-// InOrderTraverseTree method
-func (tree *BinarySearchTree) InOrderTraverseTree(function func(int)) {
-	tree.lock.RLock()
-	defer tree.lock.RUnlock()
-	inOrderTraverseTree(tree.rootNode, function)
-}
-
-// inOrderTraverseTree method
-func inOrderTraverseTree(treeNode *TreeNode, function func(int)) {
-	if treeNode != nil {
-		inOrderTraverseTree(treeNode.leftNode, function)
-		function(treeNode.value)
-		inOrderTraverseTree(treeNode.rightNode, function)
-	}
-}
-
-// PreOrderTraverse method
-func (tree *BinarySearchTree) PreOrderTraverseTree(function func(int)) {
-	tree.lock.Lock()
-	defer tree.lock.Unlock()
-	preOrderTraverseTree(tree.rootNode, function)
-}
-
-// preOrderTraverseTree method
-func preOrderTraverseTree(treeNode *TreeNode, function func(int)) {
-	if treeNode != nil {
-		function(treeNode.value)
-		preOrderTraverseTree(treeNode.leftNode, function)
-		preOrderTraverseTree(treeNode.rightNode, function)
-	}
-}
-
-// PostOrderTraverseTree method
-func (tree *BinarySearchTree) PostOrderTraverseTree(function func(int)) {
-	tree.lock.Lock()
-	defer tree.lock.Unlock()
-	postOrderTraverseTree(tree.rootNode, function)
-}
-
-// postOrderTraverseTree method
-func postOrderTraverseTree(treeNode *TreeNode, function func(int)) {
-	if treeNode != nil {
-		postOrderTraverseTree(treeNode.leftNode, function)
-		postOrderTraverseTree(treeNode.rightNode, function)
-		function(treeNode.value)
-	}
-}
-
-// MinNode method
-func (tree *BinarySearchTree) MinNode() *int {
-	tree.lock.RLock()
-	defer tree.lock.RUnlock()
-
-	treeNode := tree.rootNode
-	if treeNode == nil {
-		return (*int)(nil)
-	}
-	for {
-		if treeNode.leftNode == nil {
-			return &treeNode.value
-		}
-		treeNode = treeNode.leftNode
-	}
-}
-
-// MaxNode method
-// move to rightNode until there is no rightNode
-func (tree *BinarySearchTree) MaxNode() *int {
-	tree.lock.RLock()
-	defer tree.lock.RUnlock()
-	treeNode := tree.rootNode
-	if treeNode == nil {
-		return nil
-	}
-	for {
-		if treeNode.rightNode == nil {
-			return &treeNode.value
-		}
-		treeNode = treeNode.rightNode
-	}
-}
-
-// SearchNode method
-func (tree *BinarySearchTree) SearchNode(key int) bool {
-	tree.lock.RLock()
-	defer tree.lock.RUnlock()
-	return searchNode(tree.rootNode, key)
-}
-
-// searchNode method
-func searchNode(treeNode *TreeNode, key int) bool {
-	if treeNode == nil {
+func search(node *Node, value int) bool {
+	if node == nil {
 		return false
 	}
-	if key < treeNode.key {
-		return searchNode(treeNode.leftNode, key)
+
+	if node.value < value {
+		return search(node.right, value)
 	}
-	if key > treeNode.key {
-		return searchNode(treeNode.rightNode, key)
+
+	if node.value > value {
+		return search(node.left, value)
 	}
+
 	return true
 }
 
-// RemoveNode method
-func (tree *BinarySearchTree) RemoveNode(key int) {
-	tree.lock.Lock()
-	defer tree.lock.Unlock()
-	removeNode(tree.rootNode, key)
+func (t *Tree) Insert(key, value int) {
+	node := &Node{key, value, nil, nil}
+	if t.root == nil {
+		t.root = node
+	}
+
+	if !t.Search(value) {
+		insert(t.root, node)
+	}
 }
 
-// removeNode method
-func removeNode(treeNode *TreeNode, key int) *TreeNode {
+func insert(root, node *Node) {
+	if root.value < node.value {
+		if root.right == nil {
+			root.right = node
+		} else {
+			insert(root.right, node)
+		}
+	}
+	if root.value > node.value {
+		if root.left == nil {
+			root.left = node
+		} else {
+			insert(root.left, node)
+		}
+	}
+}
+
+func (t *Tree) PrintTree() {
+	print(t.root, 0)
+}
+
+func print(node *Node, level int) {
+	if node != nil {
+		format := ""
+		for i := 0; i < level; i++ {
+			format += "    "
+		}
+		level++
+		format += ">> "
+		print(node.right, level)
+		fmt.Printf(format+"%d\n", node.value)
+		print(node.left, level)
+
+	}
+}
+
+func (t *Tree) Inorder() {
+	inorder(t.root)
+}
+
+func inorder(root *Node) {
+	if root != nil {
+		inorder(root.left)
+		fmt.Println(root.value)
+		inorder(root.right)
+
+	}
+}
+
+func (t *Tree) Preorder() {
+	preorder(t.root)
+}
+
+func preorder(node *Node) {
+	if node != nil {
+		fmt.Println(node.value)
+		preorder(node.left)
+		preorder(node.right)
+	}
+}
+
+func (t *Tree) Postorder() {
+	postorder(t.root)
+}
+
+func postorder(node *Node) {
+	if node != nil {
+		postorder(node.left)
+		postorder(node.right)
+		fmt.Println(node.value)
+	}
+}
+
+func (t *Tree) MinNode() *int {
+	node := t.root
+	if node == nil {
+		return nil
+	}
+	for {
+		if node.left == nil {
+			return &node.value
+		}
+		node = node.left
+	}
+}
+
+func (t *Tree) MaxNode() *int {
+	treeNode := t.root
 	if treeNode == nil {
 		return nil
 	}
-	if key < treeNode.key {
-		treeNode.leftNode = removeNode(treeNode.leftNode, key)
-		return treeNode
+	for {
+		if treeNode.right == nil {
+			return &treeNode.value
+		}
+		treeNode = treeNode.right
 	}
-	if key > treeNode.key {
-		treeNode.rightNode = removeNode(treeNode.rightNode, key)
-		return treeNode
-	}
+}
 
-	if treeNode.leftNode == nil && treeNode.rightNode == nil {
-		treeNode = nil
+func (t *Tree) RemoveNode(value int) {
+	removeNode(t.root, value)
+}
+
+func removeNode(node *Node, value int) *Node {
+	if node == nil {
 		return nil
 	}
-	if treeNode.leftNode == nil {
-		treeNode = treeNode.rightNode
-		return treeNode
+	if value < node.value {
+		node.left = removeNode(node.left, value)
+		return node
 	}
-	if treeNode.rightNode == nil {
-		treeNode = treeNode.leftNode
-		return treeNode
+
+	if value > node.value {
+		node.right = removeNode(node.right, value)
+		return node
 	}
-	leftmostrightNode := treeNode.rightNode
+
+	if node.left == nil && node.right == nil {
+		node = nil
+		return nil
+	}
+
+	if node.left == nil {
+		node = node.left
+		return node
+	}
+	if node.right == nil {
+		node = node.right
+		return node
+	}
+	leftmostrightNode := node.right
+
 	for {
-		if leftmostrightNode != nil && leftmostrightNode.leftNode != nil {
-			leftmostrightNode = leftmostrightNode.leftNode
+		if leftmostrightNode != nil && leftmostrightNode.left != nil {
+			leftmostrightNode = leftmostrightNode.left
 		} else {
 			break
 		}
 	}
-	treeNode.key, treeNode.value = leftmostrightNode.key, leftmostrightNode.value
-	treeNode.rightNode = removeNode(treeNode.rightNode, treeNode.key)
-	return treeNode
+
+	node.key, node.value = leftmostrightNode.key, leftmostrightNode.value
+	node.right = removeNode(node.right, node.key)
+	return node
 }
 
-// String method
-func (tree *BinarySearchTree) String() {
-	tree.lock.Lock()
-	defer tree.lock.Unlock()
-	fmt.Println("************************************************")
-	stringify(tree.rootNode, 0)
-	fmt.Println("************************************************")
-}
-
-// stringify method
-func stringify(treeNode *TreeNode, level int) {
-	if treeNode != nil {
-		format := ""
-		for i := 0; i < level; i++ {
-			format += "       "
-		}
-		format += "***> "
-		level++
-		stringify(treeNode.rightNode, level)
-		fmt.Printf(format+"%d\n", treeNode.key)
-		stringify(treeNode.leftNode, level)
-	}
-}
-
-// print method
-func print(tree *BinarySearchTree) {
-	if tree != nil {
-		fmt.Println(" Value", tree.rootNode.value)
-		fmt.Printf("Root Tree Node")
-		printTreeNode(tree.rootNode)
-	} else {
-		fmt.Printf("Nil\n")
-	}
-}
-
-// printTreeNode method
-func printTreeNode(treeNode *TreeNode) {
-	if treeNode != nil {
-		fmt.Println(" Value", treeNode.value)
-		fmt.Printf("TreeNode Left")
-		printTreeNode(treeNode.leftNode)
-		fmt.Printf("TreeNode Right")
-		printTreeNode(treeNode.rightNode)
-	} else {
-		fmt.Printf("Nil\n")
-	}
-}
-
-// main method
 func main() {
-	var tree *BinarySearchTree = &BinarySearchTree{}
-	tree.InsertElement(3, 3)
-	tree.InsertElement(2, 2)
-	tree.InsertElement(5, 5)
-	tree.InsertElement(8, 8)
-	tree.InsertElement(4,4)
-	tree.InsertElement(1, 1)
-	tree.InsertElement(7,7)
-	tree.String()
-	tree.RemoveNode(3)
-	tree.String()
+	tree := &Tree{}
+	tree.Insert(4, 4)
+	tree.Insert(10, 10)
+	tree.Insert(10, 10)
+	tree.Insert(3, 3)
+	n := *tree.MaxNode()
+	fmt.Println(n)
+	tree.PrintTree()
+	tree.Inorder()
 }
