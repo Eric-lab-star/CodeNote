@@ -147,6 +147,8 @@ func (t *Tree) RemoveNode(value int) {
 	removeNode(t.root, value)
 }
 
+
+//removeNode!!!!
 func removeNode(node *Node, value int) *Node {
 	if node == nil {
 		return nil
@@ -161,20 +163,26 @@ func removeNode(node *Node, value int) *Node {
 		return node
 	}
 
+	//node without child
+
 	if node.left == nil && node.right == nil {
 		node = nil
 		return nil
 	}
+			
 
+	//node with 1 child
 	if node.left == nil {
-		node = node.left
-		return node
-	}
-	if node.right == nil {
 		node = node.right
 		return node
 	}
+	if node.right == nil {
+		node = node.left
+		return node
+	}
 	leftmostrightNode := node.right
+
+	//node with 2 children
 
 	for {
 		if leftmostrightNode != nil && leftmostrightNode.left != nil {
@@ -184,7 +192,9 @@ func removeNode(node *Node, value int) *Node {
 		}
 	}
 
+	//copy to node
 	node.key, node.value = leftmostrightNode.key, leftmostrightNode.value
+	//remove leftmostrightNode
 	node.right = removeNode(node.right, node.key)
 	return node
 }
