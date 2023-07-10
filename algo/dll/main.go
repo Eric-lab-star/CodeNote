@@ -2,24 +2,34 @@ package main
 
 import "fmt"
 
-type Node struct {
+type node struct {
 	prop     int
-	nextNode *Node
+	nextNode *node
 }
 
-type List struct {
-	head *Node
+type list struct {
+	head *node
 }
 
-func (list *List) AdddToHead(prop int) {
-	node := &Node{prop: prop}
+func (list *list) AddToHead(prop int) {
+	node := &node{prop: prop}
 	if list.head != nil {
 		node.nextNode = list.head
 	}
 	list.head = node
 }
 
-func (list *List) NodeWithValue(prop int) *Node {
+func (list *list) AddAfter(target, prop int) {
+	node := &node{prop: prop}
+	for targetNode := list.head; targetNode != nil; targetNode = targetNode.nextNode {
+		if targetNode.prop == target {
+			node.nextNode = targetNode.nextNode
+			targetNode.nextNode = node
+		}
+	}
+}
+
+func (list *list) NodeWithValue(prop int) *node {
 	for node := list.head; node != nil; node = node.nextNode {
 		if node.prop == prop {
 			return node
@@ -28,42 +38,32 @@ func (list *List) NodeWithValue(prop int) *Node {
 	return nil
 }
 
-func (list *List) AddAfter(target, prop int) {
-	node := &Node{prop: prop}
-	nodeWith := list.NodeWithValue(target)
-	if nodeWith != nil {
-		node.nextNode = nodeWith.nextNode
-		nodeWith.nextNode = node
-	}
-}
-func (list *List) LastNode() *Node {
+func (list *list) LastNode() *node {
 	for node := list.head; node != nil; node = node.nextNode {
 		if node.nextNode == nil {
 			return node
 		}
 	}
 	return nil
-
 }
 
-func (list *List) AddToEnd(prop int) {
-	node := &Node{prop: prop}
+func (list *list) AddToLast(prop int) {
+	node := &node{prop: prop}
 	lastNode := list.LastNode()
 	if lastNode != nil {
 		lastNode.nextNode = node
 	}
 }
 
-func (list *List) IterateList() {
+func (list *list) Iterate() {
 	for node := list.head; node != nil; node = node.nextNode {
 		fmt.Println(node)
 	}
-
 }
 func main() {
-	list := &List{}
-	list.AdddToHead(1)
-	list.AddAfter(1, 2)
-	list.AddToEnd(4)
-	list.IterateList()
+	list := &list{}
+	list.AddToHead(1)
+	list.AddToLast(3)
+	list.AddToLast(4)
+	list.Iterate()
 }
