@@ -1,32 +1,26 @@
 package main
 
-import (
-	"fmt"
-)
-
-// doubly linked list
+import "fmt"
 
 type Node struct {
-	prop int
-	prev *Node
-	next *Node
+	prop     int
+	nextNode *Node
 }
 
-type LinkedList struct {
+type List struct {
 	head *Node
 }
 
-func (list *LinkedList) AddToHead(prop int) {
+func (list *List) AdddToHead(prop int) {
 	node := &Node{prop: prop}
 	if list.head != nil {
-		list.head.prev = node
-		node.next = list.head
+		node.nextNode = list.head
 	}
 	list.head = node
 }
 
-func (list *LinkedList) NodeWithValue(prop int) *Node {
-	for node := list.head; node != nil; node = node.next {
+func (list *List) NodeWithValue(prop int) *Node {
+	for node := list.head; node != nil; node = node.nextNode {
 		if node.prop == prop {
 			return node
 		}
@@ -34,27 +28,42 @@ func (list *LinkedList) NodeWithValue(prop int) *Node {
 	return nil
 }
 
-func (list *LinkedList) AddAfter(prop int, node int) {
-	new := &Node{prop: prop}
-	nodeWith := list.NodeWithValue(node)
+func (list *List) AddAfter(target, prop int) {
+	node := &Node{prop: prop}
+	nodeWith := list.NodeWithValue(target)
 	if nodeWith != nil {
-		new.prev = nodeWith
-		new.next = nodeWith.prev
-		nodeWith.next = new
+		node.nextNode = nodeWith.nextNode
+		nodeWith.nextNode = node
 	}
+}
+func (list *List) LastNode() *Node {
+	for node := list.head; node != nil; node = node.nextNode {
+		if node.nextNode == nil {
+			return node
+		}
+	}
+	return nil
 
 }
 
-func (list *LinkedList) ItertateList() {
-	for node := list.head; node != nil; node = node.next {
-		fmt.Println(node.prop)
+func (list *List) AddToEnd(prop int) {
+	node := &Node{prop: prop}
+	lastNode := list.LastNode()
+	if lastNode != nil {
+		lastNode.nextNode = node
 	}
+}
+
+func (list *List) IterateList() {
+	for node := list.head; node != nil; node = node.nextNode {
+		fmt.Println(node)
+	}
+
 }
 func main() {
-	list := &LinkedList{}
-	list.AddToHead(1)
-	list.AddAfter(2, 1)
+	list := &List{}
+	list.AdddToHead(1)
 	list.AddAfter(1, 2)
-	list.ItertateList()
-
+	list.AddToEnd(4)
+	list.IterateList()
 }
