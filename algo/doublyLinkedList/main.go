@@ -3,9 +3,9 @@ package main
 import "fmt"
 
 type Node struct {
-	prop     int
-	nextNode *Node
-	prevNode *Node
+	prop int
+	next *Node
+	prev *Node
 }
 
 type LinkedList struct {
@@ -15,14 +15,14 @@ type LinkedList struct {
 func (list *LinkedList) AddToHead(prop int) {
 	node := &Node{prop: prop}
 	if list.head != nil {
-		node.nextNode = list.head
-		list.head.prevNode = node
+		node.next = list.head
+		list.head.prev = node
 	}
 	list.head = node
 }
 
-func (list *LinkedList) NodeWithValue(prop int) *Node {
-	for node := list.head; node != nil; node = node.nextNode {
+func (list *LinkedList) NodeWith(prop int) *Node {
+	for node := list.head; node != nil; node = node.next {
 		if node.prop == prop {
 			return node
 		}
@@ -31,21 +31,20 @@ func (list *LinkedList) NodeWithValue(prop int) *Node {
 }
 
 func (list *LinkedList) AddAfter(target, prop int) {
-	nodeWith := list.NodeWithValue(target)
 	node := &Node{prop: prop}
+	nodeWith := list.NodeWith(target)
 
 	if nodeWith != nil {
-		node.nextNode = nodeWith.nextNode
-		node.prevNode = nodeWith
-		nodeWith.nextNode.prevNode = node
-		nodeWith.nextNode = node
-
+		node.next = nodeWith.next
+		node.prev = nodeWith
+		nodeWith.next.prev = node
+		nodeWith.next = node
 	}
 }
 
 func (list *LinkedList) LastNode() *Node {
-	for node := list.head; node != nil; node = node.nextNode {
-		if node.nextNode == nil {
+	for node := list.head; node != nil; node = node.next {
+		if node.next == nil {
 			return node
 		}
 	}
@@ -53,42 +52,37 @@ func (list *LinkedList) LastNode() *Node {
 }
 
 func (list *LinkedList) AddToEnd(prop int) {
-	lastNode := list.LastNode()
+	last := list.LastNode()
 	node := &Node{prop: prop}
-	if lastNode != nil {
-		lastNode.nextNode = node
-		node.prevNode = lastNode
+
+	if last != nil {
+		last.next = node
+		node.prev = last
 	}
 }
 
 func (list *LinkedList) IterateToNext() {
-	for node := list.head; node != nil; node = node.nextNode {
-		fmt.Println(node)
-	}
-}
-
-func (list *LinkedList) IterateToPrev() {
-	for node := list.LastNode(); node != nil; node = node.prevNode {
+	for node := list.head; node != nil; node = node.next {
 		fmt.Println(node)
 	}
 }
 
 func (list *LinkedList) NodeBetween(prev, next int) *Node {
-	for node := list.head; node != nil; node = node.nextNode {
-		if node.prevNode != nil && node.nextNode != nil {
-			if node.prevNode.prop == prev && node.nextNode.prop == next {
+	for node := list.head; node != nil; node = node.next {
+		if node.next != nil && node.prev != nil {
+			if node.next.prop == next && node.prev.prop == prev {
 				return node
 			}
 		}
 	}
 	return nil
 }
-
 func main() {
+
 	list := &LinkedList{}
 	list.AddToHead(1)
 	list.AddToEnd(2)
+	list.AddToEnd(3)
 	list.AddToEnd(4)
-	fmt.Println(list.NodeBetween(1, 4))
-
+	fmt.Println(list.NodeBetween(2, 4))
 }
