@@ -1,3 +1,6 @@
-void main(){
-	print('안녕하세요');
+void main() {
+  int a = 10;
+  int c = a << 2;
+
+  print(c);
 }
