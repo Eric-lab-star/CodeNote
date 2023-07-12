@@ -20,6 +20,7 @@ func (queue *Queue) Add(order *Order) {
 			if order.priority > addedOrder.priority {
 				*queue = append((*queue)[:i], append(Queue{order}, (*queue)[i:]...)...)
 				appended = true
+				break
 			}
 		}
 		if !appended {
@@ -40,10 +41,8 @@ func main() {
 	order1 := &Order{2, 20, "Computer", "Greg White"}
 	order2 := &Order{1, 10, "Monitoer", "John Smith"}
 	order3 := &Order{5, 10, "Monitoer", "John Smith"}
-	order4 := &Order{3, 10, "Monitoer", "John Smith"}
 	queue.Add(order1)
 	queue.Add(order2)
 	queue.Add(order3)
-	queue.Add(order4)
 	queue.Iterate()
 }
