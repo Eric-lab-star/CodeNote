@@ -1,6 +1,4 @@
 void main() {
-  int a = 10;
-  int c = a << 2;
-
-  print(c);
+  String hello = 'Hi⌣ ';
+  print(hello);
 }
