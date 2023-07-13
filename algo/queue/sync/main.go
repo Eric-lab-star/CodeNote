@@ -20,7 +20,6 @@ type Queue struct {
 
 // New method initialises queue
 func (queue *Queue) New() {
-
 	queue.message = make(chan int)
 	queue.queuePass = make(chan int)
 	queue.queueTicket = make(chan int)
