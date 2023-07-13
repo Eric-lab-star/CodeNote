@@ -2,6 +2,6 @@
 class Hello {
     public static void main(String[] args) {
 	double y = 1 << 3;
-	System.out.println(y);
+	d System.out.println(y);
     }
 }

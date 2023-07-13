@@ -7,7 +7,6 @@ const lineNumber = 'line-number';
 
 void main(List<String> arguments) {
   exitCode = 0; // presume success
-
   final parser = ArgParser()..addFlag(lineNumber, negatable: false, abbr: 'n');
 
   ArgResults argResults = parser.parse(arguments);
